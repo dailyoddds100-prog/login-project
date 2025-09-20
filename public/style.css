@@ -1,0 +1,74 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+.english{
+    margin-top: 1rem;
+    margin-bottom: 5rem;
+    font-family: -apple-system, sans-serif;
+}
+form{
+    margin-top: 10rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+form input{
+    width: 22rem;
+    height: 3rem;
+    border-radius: 0.3rem;
+    border: 1px solid gray;
+    padding-left: 0.5rem;
+    text-align: start;
+}
+form button{
+    width: 23rem;
+    height: 2.5rem;
+    border-radius: 2rem;
+    border: none;
+    background-color: #1877f2;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+}
+/* form button:hover{
+    background-color: #165cdb;
+} */
+.Forgotten{
+    margin-top: 1.5rem;
+    color: #585858;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: -apple-system, sans-serif;
+    margin-bottom: 10rem;
+}
+.create{
+    margin-top: 3rem;
+    width: 23rem;
+    height: 2.5rem;
+    border-radius: 2rem;
+    border: 1px solid #1877f2;
+    background-color: transparent;
+    color: #1877f2;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+    margin-bottom: 1.5rem;
+}
+.details{
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    gap: 1rem;
+    color: gray;
+}
+a{
+    text-decoration: none;
+    color: gray;
+    font-size: 0.8rem;
+    font-family: -apple-system, sans-serif;
+}

