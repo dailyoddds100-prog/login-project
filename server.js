@@ -1,73 +1,56 @@
-const express = require('express');
-const mysql = require('mysql2');
-const path = require('path');
 require('dotenv').config();
-
+const express = require('express');
+const { Pool } = require('pg');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.static('public'));
 
-// Serve static frontend (if using build/dist folder)
-app.use(express.static(path.join(__dirname, 'public'))); // or 'dist' if using React/Vite
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
 
-// Database connection
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
+pool.connect()
+  .then(() => console.log('✅ Connected to PostgreSQL database'))
+  .catch(err => console.error('❌ Database connection failed:', err));
 
-db.connect((err) => {
-  if (err) {
-    console.error('Database connection failed:', err);
-    return;
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).send("Username and password required");
   }
-  console.log('✅ Connected to MySQL database');
+
+  try {
+    const query = "INSERT INTO users (username, password) VALUES ($1, $2)";
+    await pool.query(query, [username, password]);
+    res.send("User registered successfully!");
+  } catch (err) {
+    console.error("Error inserting user:", err);
+    res.status(500).send("Error saving user");
+  }
 });
 
-// Register route
-app.post('/register', (req, res) => {
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username || !password)
-    return res.status(400).send('Username and password required');
+  try {
+    const query = "SELECT * FROM users WHERE username = $1 AND password = $2";
+    const result = await pool.query(query, [username, password]);
 
-  const sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
-  db.query(sql, [username, password], (err, result) => {
-    if (err) {
-      console.error('Error inserting user:', err);
-      return res.status(500).send('Error saving user');
-    }
-    res.send('User registered successfully!');
-  });
-});
-
-// Login route
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-
-  const sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
-  db.query(sql, [username, password], (err, results) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).send('Error during login');
-    }
-
-    if (results.length > 0) {
-      res.send(`Welcome back, ${username}! ✅`);
+    if (result.rows.length > 0) {
+      res.send(`<h2>Welcome back, ${username}! ✅</h2>`);
     } else {
-      res.send('Invalid username or password ❌');
+      res.send('<h2>Invalid username or password ❌</h2>');
     }
-  });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).send("Something went wrong, please try again.");
+  }
 });
 
-// Start server
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
